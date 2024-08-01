@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Box, Stack, Button, Typography, Modal, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel } from "@mui/material";
-import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, query, getDocs, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from './firebase'; // Ensure this path is correct based on your directory structure
 
 export default function Home() {
@@ -45,23 +45,33 @@ export default function Home() {
     }
   
     if (item.trim() !== '') {
-      await setDoc(doc(firestore, 'pantry', item), {
-        isLiquid: isLiquid,
-        quantity: quantity,
-      });
-      setPantry((prevPantry) => [...prevPantry, { name: item, isLiquid, quantity, id: item }]);
-      setInputValue(''); // Clear the input field after adding the item
-      setQuantity(1); // Reset quantity
-      setIsLiquid(false); // Reset liquid checkbox
-      handleOpen(); // Show confirmation modal
+      try {
+        const itemRef = doc(firestore, 'pantry', item);
+        await setDoc(itemRef, {
+          name: item,
+          isLiquid: isLiquid,
+          quantity: quantity,
+        });
+        setPantry((prevPantry) => [...prevPantry, { name: item, isLiquid, quantity, id: item }]);
+        setInputValue(''); // Clear the input field after adding the item
+        setQuantity(1); // Reset quantity
+        setIsLiquid(false); // Reset liquid checkbox
+        handleOpen(); // Show confirmation modal
+      } catch (error) {
+        console.error("Error adding item:", error);
+      }
     } else {
       console.log('Item cannot be empty');
     }
   };
 
-  const removeItem = (id) => {
-    setPantry((prevPantry) => prevPantry.filter(item => item.id !== id));
-    // Add Firebase remove logic here if needed
+  const removeItem = async (id) => {
+    try {
+      await deleteDoc(doc(firestore, 'pantry', id));
+      setPantry((prevPantry) => prevPantry.filter(item => item.id !== id));
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
   };
 
   // Filter pantry items based on selected filter

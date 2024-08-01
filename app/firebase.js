@@ -16,7 +16,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app); // Optional, only if you need Analytics
+
+// Optionally, only include analytics on the client side
+let analytics;
+if (typeof window !== "undefined") {
+  analytics = getAnalytics(app); // Optional, only if you need Analytics
+}
+
 const firestore = getFirestore(app);
 
-export { app, firestore };
+export { app, firestore, analytics };
