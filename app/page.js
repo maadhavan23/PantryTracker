@@ -89,6 +89,7 @@ export default function Home() {
       justifyContent={'center'}
       alignItems={'center'}
       gap={2}
+      bgcolor={'#E8F7EE'}
     >
       {/* Modal for item added confirmation */}
       <Modal
@@ -130,7 +131,6 @@ export default function Home() {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            bgcolor: 'background.paper',
             border: '2px solid #333',
             boxShadow: 24,
             p: 4,
@@ -148,40 +148,45 @@ export default function Home() {
       {/* Header */}
       <Box
         width='800px'
-        height='100px'
+        height='150px'
         bgcolor={'#ADD8E6'}
         border={'2px solid #333'}
         display={'flex'}
         justifyContent={'center'}
         alignItems={'center'}
+        bgcolor= {'#B8C4BB'}
+
       >
         <Typography
-          variant={'h2'}
+          variant={'h3'}
           color={'#333'}
           textAlign={'center'}
           fontWeight={'bold'}
         >
-          Pantry Items
+          Pantry Items  <br />
+          by Maadhavan Muthuselvan
         </Typography>
       </Box>
 
-      {/* Filter Dropdown */}
-      <FormControl sx={{ mb: 2, minWidth: 120 }}>
-        <InputLabel id="filter-label">Filter</InputLabel>
-        <Select
-          labelId="filter-label"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          label="Filter"
-        >
-          <MenuItem value="all">All</MenuItem>
-          <MenuItem value="liquid">Liquids</MenuItem>
-          <MenuItem value="non-liquid">Non-Liquids</MenuItem>
-        </Select>
-      </FormControl>
+          {/* FilterBox */}
+      <Box sx={{ mb: 2, minWidth: 120, bgcolor: '#B8C4BB', p: 2, borderRadius: 1 }}>
+  <FormControl fullWidth>
+    <InputLabel id="filter-label" sx={{ color: '#333' }}>Filter</InputLabel>
+    <Select
+      labelId="filter-label"
+      value={filter}
+      onChange={(e) => setFilter(e.target.value)}
+      label="Filter"
+    >
+      <MenuItem value="all">All</MenuItem>
+      <MenuItem value="liquid">Liquids</MenuItem>
+      <MenuItem value="non-liquid">Non-Liquids</MenuItem>
+    </Select>
+  </FormControl>
+</Box>
   
       {/* Input and Button */}
-      <Box display="flex" alignItems="center" gap={2}>
+      <Box display="flex" alignItems="center" gap={2} sx={{ bgcolor: '#B8C4BB', p: 2, borderRadius: 1 }}>
         <TextField
           id="outlined-basic"
           label="Ingredient/Food"
@@ -214,13 +219,20 @@ export default function Home() {
         <Button
           variant="contained"
           onClick={() => addItem(inputValue)}
+          sx={{
+            bgcolor: '#663F46', // Set the background color
+            color: '#C9D6EA',   // Set the text color
+            '&:hover': {
+              bgcolor: '#3C362A', // Set the hover color
+            },
+          }}
         >
           Add
         </Button>
       </Box>
   
       {/* Content */}
-      <Stack width="800px" height="300px" spacing={2} overflow={'auto'} mt={2}>
+      < Stack width="800px" height="300px" spacing={2} overflow={'auto'} mt={2}>
         {filteredPantry.length > 0 ? filteredPantry.map((item, index) => (
           <Box
             key={index}
@@ -228,7 +240,7 @@ export default function Home() {
             minHeight="60px"
             display={'flex'}
             alignItems={'center'}
-            bgcolor={'#f0f0f0'}
+            bgcolor={item.isLiquid ? '#B3E5FC' : '#C9D6EA'} // Change color based on whether the item is liquid
             p={2}
             borderRadius={2}
             sx={{ position: 'relative' }}
@@ -240,11 +252,11 @@ export default function Home() {
               sx={{ flexGrow: 1 }}
             >
               {item.name}
-              {item.isLiquid && <span role="img" aria-label="water drop" style={{ color: '#00f', marginLeft: '8px' }}>💦</span>}
+              {item.isLiquid && <span role="img" aria-label="water drop" style={{ color: '#00f', marginLeft: '8px' }}></span>}
             </Typography>
             <Typography
               variant={'h6'}
-              color={'#333'}
+              color={'#3C362A'}
               fontWeight={300}
               sx={{ textAlign: 'center', flexGrow: 1 }}
             >
@@ -269,6 +281,7 @@ export default function Home() {
           </Typography>
         )}
       </Stack>
+
     </Box>
   );
 }
